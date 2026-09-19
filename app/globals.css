@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Surfaces & Layout */
+    --color-dark-canvas: #080f17;
+    --color-dark-surface: #151c28;
+    --color-light-canvas: #faf9f6;
+    --color-light-surface: #ffffff;
+
+    /* Accents & Borders */
+    --color-accent-primary: #0284c7;
+    --color-accent-highlight: #38bdf8;
+    --color-border: #e2e8f0;
+
+    /* Typography & Text */
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-metadata: #94a3b8;
+  }
+
+  body {
+    background-color: var(--color-light-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans), 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Technical Utility Styles */
+.font-mono-tech, .font-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Grid pattern — only use on dark navy sections, not on light page surfaces */
+.tech-grid-pattern {
+  background-image: radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.subtle-hover-scale {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+}
+
+.subtle-hover-scale:hover {
+  transform: translateY(-2px);
+}
+

@@ -1,0 +1,437 @@
+  ==============================================================================
+  JaaGee Brand Language
+
+  QUIET.
+  ELEGANT.
+  COMFORTABLE.
+  PROFESSIONAL.
+  TRUSTWORTHY.
+
+  JaaGee should communicate confidence through restraint.
+
+  The website must not feel loud, promotional, generic,
+  AI-generated, or unnecessarily complicated.
+
+  Visual decisions should prioritize:
+  - whitespace
+  - typography
+  - photography
+  - hierarchy
+  - factual information
+  - technical precision
+  - comfortable navigation
+  - restrained use of colour
+
+  Copy should be:
+  - factual
+  - calm
+  - concise
+  - knowledgeable
+  - human
+  - technically accurate
+
+  Avoid:
+  - exaggerated marketing claims
+  - unnecessary superlatives
+  - excessive animation
+  - visual clutter
+  - generic corporate language
+  - fabricated statistics
+  - fabricated testimonials
+  - invented technical claims
+  - aggressive sales language
+
+  Trust should be demonstrated through evidence,
+  not claimed through adjectives.
+  ==============================================================================
+
+  ==============================================================================
+  JaaGee Website Redesign & Production Architecture Changelog
+  Workspace: C:\xampp\htdocs\jaagee
+  Source Package: C:\xampp\htdocs\jaagee-source\jaagee-content
+  ==============================================================================
+
+  [2026-09-14] - Phase 0: Project Initialization & Changelog Setup
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\Updates.txt (Created)
+  What Changed:
+    - Initialized project changelog to record phase-by-phase implementation progress, architectural decisions, and verification results.
+  Verification:
+    - Verified changelog creation.
+
+  [2026-09-14] - Phase 1: Database Architecture, Local Fallback & Seed Engine
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\lib\migrations\schema.sql (Created)
+    - C:\xampp\htdocs\jaagee\lib\supabase\config.ts (Created)
+    - C:\xampp\htdocs\jaagee\lib\db\data\seed-data.ts (Created)
+    - C:\xampp\htdocs\jaagee\lib\db\repository.ts (Created)
+  What Changed:
+    - Created production SQL DDL schema with RLS security policies for brands, categories, industries, products, product_industries, product_images, services, enquiries, and profiles.
+    - Implemented publication status model (`status`: `draft`, `published`, `archived`, `discontinued`) and separate `verification_status` (`unverified`, `verified`).
+    - Added strict environment credential detector in `config.ts` enforcing that production builds fail explicitly if Supabase credentials are missing rather than silently using dev fallback data.
+    - Processed 50 raw source records: Excluded 7 extraction artifacts (cart, RSS comments, brand landing pages), marked 1 discontinued model (CAL2K, linked to CAL3K-A), set 9 unverified/draft items (AlveoPC, LabMill, Rheo F4, SDmatic, Alveolab, Mixolab 2, Reveal Base, Reveal 2.0, LactoScope Unverified), and published 33 verified clean instruments.
+    - Copied 9 verified unique product image files to `public/images/products/` (excluding 1 cart thumbnail and 1 byte duplicate).
+    - Modeled OPSIS and OPSIS LiquidLINE brand relationship correctly.
+  Verification:
+    - Verified 43 total processed products (33 published + 9 draft + 1 discontinued) and zero artifact leaks.
+
+  [2026-09-14] - Phase 2 & 3: Production Product Catalogue & Detail Pages
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\components\ui\product-image-fallback.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\products\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\products\[slug]\page.tsx (Created)
+  What Changed:
+    - Created `/products` catalogue page with live search, brand tabs, category filter, industry filter, and empty state handler.
+    - Created `/products/[slug]` detail page with technical specifications table, key applications, feature lists, quote CTA, discontinued replacement notice, and related instruments.
+    - Built neutral SVG blueprint fallback component for instruments without recovered photos.
+  Verification:
+    - Verified catalogue filtering and slug routing logic.
+
+  [2026-09-14] - Phase 4, 5 & 6: Portals for Brands, Industries & Services
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\app\brands\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\brands\[slug]\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\industries\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\industries\[slug]\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\services\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\about\page.tsx (Created)
+  What Changed:
+    - Built `/brands` & `/brands/[slug]` portals for all 7 international partner brands.
+    - Built `/industries` & `/industries/[slug]` portals for Agri-Feed, Grain Milling, Food, Dairy, Beverages, Environmental, and Energy.
+    - Built `/services` page covering Equipment Supply, Commissioning, Application Guidance, and Maintenance.
+  Verification:
+    - Verified route structure and brand/industry linkages.
+
+  [2026-09-14] - Phase 7, 8, 9 & 10: Homepage Re-anchoring, Enquiry API & Security
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\app\page.tsx (Modified)
+    - C:\xampp\htdocs\jaagee\lib\validation\enquiry.ts (Created)
+    - C:\xampp\htdocs\jaagee\app\api\enquiry\route.ts (Created)
+    - C:\xampp\htdocs\jaagee\app\contact\page.tsx (Created)
+  What Changed:
+    - Re-anchored homepage copy around factual Agri-Food, Feed, Grain, and Dairy Analytical Instrumentation positioning (removing generic petroleum/chemical focus).
+    - Built Zod validation schema and honeypot spam filter for enquiries.
+    - Built `/api/enquiry` route returning structured JSON, inserting into Supabase when connected, and logging locally during development.
+    - Upgraded `/contact` page to call the validated API endpoint with transition pending states.
+  Verification:
+    - Form validation and endpoint response verified.
+
+  [2026-09-14] - Phase 11 & 12: Admin CMS Dashboard & Dynamic SEO
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\app\admin\dashboard\page.tsx (Created)
+    - C:\xampp\htdocs\jaagee\app\sitemap.ts (Created)
+    - C:\xampp\htdocs\jaagee\app\robots.ts (Created)
+  What Changed:
+    - Created `/admin/dashboard` CMS dashboard showing publication metrics (published, draft, unverified, discontinued) and product control table.
+    - Generated dynamic XML sitemap (`/sitemap.xml`) including only published and verified products.
+    - Created `/robots.txt` blocking admin and api paths.
+  Verification:
+    - Verified sitemap generation and admin stats calculation.
+
+  [2026-09-14] - Pre-Supabase Final Code Audit
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\lib\migrations\schema.sql (Updated)
+  What Changed:
+    - Audited RLS policy security in `schema.sql` and added non-recursive `public.is_admin(user_id)` SECURITY DEFINER function to prevent RLS recursion on `profiles`.
+    - Verified product counts (50 raw, 7 artifacts excluded, 43 total imported: 33 published, 9 draft/unverified, 1 discontinued).
+    - Verified Enquiry API payload immutability (`status` hardcoded to `'new'`).
+    - Verified Storage bucket recommendations and dynamic sitemap.
+  Verification:
+    - `npx tsc --noEmit` exited with 0 errors.
+    - `npm run build` exited with 0 errors (all static/dynamic routes compiled cleanly).
+
+  [2026-09-14] - Phase 13: Ground-Up Visual Redesign (Premium Scientific & Editorial Aesthetics)
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\app\globals.css (Updated with custom color tokens, font hierarchy, blueprint grid utilities)
+    - C:\xampp\htdocs\jaagee\components\layout\header.tsx (Created - Desktop nav & mobile drawer with backdrop blur)
+    - C:\xampp\htdocs\jaagee\components\layout\footer.tsx (Created - Dark editorial footer with brand links)
+    - C:\xampp\htdocs\jaagee\components\ui\product-image-fallback.tsx (Updated - Refined typographic specification stamp)
+    - C:\xampp\htdocs\jaagee\app\page.tsx (Redesigned - Editorial Hero with large Kjelroc photography, philosophy statement, 7-brand representation wall, featured equipment showcase, industry hierarchy, numbered services, 1987 trust timeline, dark enquiry CTA)
+    - C:\xampp\htdocs\jaagee\app\products\page.tsx (Redesigned - Filter pills, clean search, asymmetric card grid)
+    - C:\xampp\htdocs\jaagee\app\products\[slug]\page.tsx (Redesigned - Equipment specification sheet aesthetic, primary photo canvas, technical parameter table, replacement model notices)
+    - C:\xampp\htdocs\jaagee\app\brands\page.tsx & [slug]\page.tsx (Redesigned - Manufacturer portal and equipment listings)
+    - C:\xampp\htdocs\jaagee\app\industries\page.tsx & [slug]\page.tsx (Redesigned - Sector application portals)
+    - C:\xampp\htdocs\jaagee\app\services\page.tsx (Redesigned - 01-04 technical service rows)
+    - C:\xampp\htdocs\jaagee\app\about\page.tsx (Redesigned - Editorial history and standards page)
+    - C:\xampp\htdocs\jaagee\app\contact\page.tsx (Redesigned - Validated technical enquiry form with Suspense boundary)
+  [2026-09-17] - Phase 14: Implementation of the JaaGee Brand Language
+  Files Affected:
+    - C:\xampp\htdocs\jaagee\Updates.txt (Updated with permanent design principles at header)
+    - C:\xampp\htdocs\jaagee\app\globals.css (Configured official JaaGee palette: #080F17, #151C28, #FAF9F6, #FFFFFF, #0284C7, #38BDF8, #E2E8F0, #0F172A, #475569, #94A3B8)
+    - C:\xampp\htdocs\jaagee\app\layout.tsx (Integrated Inter & JetBrains Mono typography hierarchy)
+    - C:\xampp\htdocs\jaagee\components\layout\header.tsx (Redesigned with crisp white surface, JaaGee SCIENTIFIC wordmark, subtitle tagline, search, and Request Quote CTA)
+    - C:\xampp\htdocs\jaagee\components\layout\footer.tsx (Refined dark authority footer with #080F17 background, quick links matrix, and Lagos contact info)
+    - C:\xampp\htdocs\jaagee\app\page.tsx (Redesigned homepage: quiet hero with hero-1.jpg, PRECISION INSTRUMENTATION eyebrow, reliable results headline, dark partner band, 3 circular category masks, 4 featured brands, catalogue instruments, industry cards, 01-04 services & 1987 trust story split, and Tell us what you need to measure CTA)
+    - C:\xampp\htdocs\jaagee\app\about\page.tsx (Redesigned about page matching home-page-visual-2.png: hero, story, 4 core values, 1987-today journey timeline, and mission)
+    - C:\xampp\htdocs\jaagee\app\products\page.tsx & [slug]\page.tsx (Refined catalogue & product detail layout with light surface and spec sheet aesthetic)
+    - C:\xampp\htdocs\jaagee\app\brands\page.tsx & [slug]\page.tsx (Quiet light canvas headers and direct manufacturer representation)
+    - C:\xampp\htdocs\jaagee\app\industries\page.tsx & [slug]\page.tsx (Application sector portals aligned to brand language)
+    - C:\xampp\htdocs\jaagee\app\services\page.tsx (01-04 technical lifecycle services with quiet layout)
+    - C:\xampp\htdocs\jaagee\app\contact\page.tsx (Tell us what you need to measure header, preserving 100% Zod validation and enquiry routing)
+  What Changed:
+    - Frozen application architecture and backend logic (Supabase, repository, product data model, filtering, enquiry API, validation, SEO, publication rules).
+    - Aligned all styling, typography, photography, and copywriting strictly with the brand language: QUIET. ELEGANT. COMFORTABLE. PROFESSIONAL. TRUSTWORTHY.
+  Verification:
+    - `npx tsc --noEmit` exited with 0 errors.
+    - `npm run build` exited with 0 errors (all 13 static/dynamic routes compiled in 1090ms).
+    - Verified HTTP 200 responses across all core routes.
+
+[2026-09-18] - Phase 15: Source Catalogue Reconciliation (50 vs 43 Discrepancy Resolved)
+Files Affected:
+  - C:\xampp\htdocs\jaagee\lib\db\data\seed-data.ts (Updated)
+  - C:\xampp\htdocs\jaagee\Updates.txt (Updated)
+What Changed:
+  - Performed comprehensive 1-to-1 reconciliation between the 50 recovered source records (in jaagee-content/products.json) and the initial 43 seed records.
+  - Identified the exact root cause of the 7 missing items:
+    1. index-html-add-to-cart-2165-html: WooCommerce cart action URL artifact (Intentionally Excluded).
+    2. feed: WordPress RSS comment feed artifact (Intentionally Excluded).
+    3. opsis (/products/equipments/opsis/index.html): Brand landing overview page duplicating 7 individual LiquidLine instruments (Intentionally Excluded as redundant wrapper).
+    4. perten (/products/equipments/perten/index.html): Brand landing overview page duplicating the in-line DA 7300 NIR sensor (Intentionally Excluded as redundant wrapper).
+    5. chopin-2 (/products/equipments/chopin-2/index.html): Mistakenly classified as a brand page; actually contained authentic specifications for the Infraneo Multi-Purpose Infrared Grain Analyzer. Restored to canonical catalogue (`infraneo-grain-analyzer`).
+    6. neogen (/products/equipments/neogen/index.html): Mistakenly classified as a brand page; actually contained complete technical specifications (Samsung S3C2440, WinCE, IP67) for the AccuScan ® Gold Lateral Flow Reader. Restored to canonical catalogue (`accuscan-gold`).
+    7. ankom (/products/equipments/ankom/index.html): Contained the authentic ANKOM TDF (Total Dietary Fiber) Analyzer (AOAC 985.29, 991.43). The initial seed data conflated ANKOM 2000 Automated Fiber Analyzer into ankom-tdf-fiber-analyzer. Disambiguated both: updated ANKOM 2000 to `ankom-2000-automated-fiber-analyzer` and restored the true ANKOM TDF Dietary Fiber Analyzer under `ankom-tdf-fiber-analyzer`.
+  - Canonical catalogue count successfully reconciled and expanded from 43 to 46 clean instruments (36 published & verified, 9 draft/unverified, 1 discontinued linked to CAL3K-A replacement).
+  - Preserved documented exclusions for the 4 non-product extraction artifacts (2 web artifacts + 2 redundant brand overview wrappers).
+Verification:
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully (all 13 static/dynamic routes compiled in Turbopack).
+  - Confirmed 46 total canonical products in seed dataset with zero data loss or broken links.
+
+[2026-09-18] - Phase 16: Supabase Foundation & Data Layer Integration
+Files Affected:
+  - C:\xampp\htdocs\jaagee\.env.local (Created with live Supabase credentials & pooler parameters)
+  - C:\xampp\htdocs\jaagee\lib\migrations\schema.sql (Updated to allow public read of verified discontinued products)
+  - C:\xampp\htdocs\jaagee\lib\migrations\apply-migration.js (Created - DDL migration executor)
+  - C:\xampp\htdocs\jaagee\lib\db\seed-supabase.js (Created - Reconciled canonical dataset seeder)
+  - C:\xampp\htdocs\jaagee\lib\db\repository.ts (Updated - Live Supabase queries with relation joins and seed fallback)
+  - C:\xampp\htdocs\jaagee\Updates.txt (Updated)
+What Changed:
+  - Configured Supabase project credentials in `.env.local` connecting to live project `izdpbrwehqmkapbkxztc` via verified Supavisor pooler (`aws-1-eu-west-1.pooler.supabase.com:5432`).
+  - Applied and verified `lib/migrations/schema.sql` against the Supabase PostgreSQL instance:
+    - Tables: `brands`, `categories`, `enquiries`, `industries`, `product_images`, `product_industries`, `products`, `profiles`, `services`.
+    - Enums: `product_status` ('draft', 'published', 'archived', 'discontinued'), `verification_status` ('unverified', 'verified').
+    - Functions: `public.is_admin(user_id)` SECURITY DEFINER.
+    - Security: Row-Level Security (RLS) enabled on all 9 tables. Updated public product policy to permit verified discontinued products for public replacement notices.
+  - Executed idempotent seed engine importing all reconciled catalogue data:
+    - 7 Brands (including parent/child relationship between OPSIS and LiquidLINE).
+    - 8 Categories.
+    - 7 Industries.
+    - 4 Technical Services.
+    - 46 Reconciled Products (36 published & verified, 9 draft/unverified, 1 discontinued).
+    - 85 Product-Industry relations.
+    - 9 Product Images.
+    - 1 Discontinued replacement linkage (CAL2K -> CAL3K-A).
+  - Updated `lib/db/repository.ts`:
+    - Refactored `getProducts()` to query Supabase PostgREST with nested relation joins (`brand`, `category`, `product_industries`, `product_images`), mapping rows to `ProductSeed` and falling back to `SEED_PRODUCTS`.
+    - Refactored `getProductBySlug()` to fetch from Supabase with replacement model resolution and seed fallback.
+Verification:
+  - Database row counts verified in Supabase: 7 brands, 8 categories, 7 industries, 4 services, 46 products (36 published & verified, 9 draft, 1 discontinued), 85 product-industries, 9 images.
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully in Turbopack (all 13 static/dynamic routes compiled).
+  - Verified live HTTP 200 responses:
+    - `/admin/dashboard` renders "Supabase Connected" with 36 published records.
+    - `/products` renders live catalogue items (including newly restored Infraneo, AccuScan Gold, ANKOM TDF).
+    - `/products/kjelroc-analyzer` renders live product detail page.
+    - `/products/cal2k-oxygen-bomb-calorimeter-system` correctly renders Discontinued Notice and CAL3K-A replacement link.
+
+
+[2026-09-18] - Phase 17: Admin Authentication (Supabase Auth + Server-Side Authorization)
+Files Affected:
+  - C:\xampp\htdocs\jaagee\package.json (Updated — added @supabase/ssr 0.12.7)
+  - C:\xampp\htdocs\jaagee\lib\supabase\server.ts (Created — cookie-based Supabase server client)
+  - C:\xampp\htdocs\jaagee\proxy.ts (Created — Next.js 16 proxy replacing middleware.ts)
+  - C:\xampp\htdocs\jaagee\app\admin\login\page.tsx (Created — admin login page with Server Action)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\layout.tsx (Created — protected admin shell with logout)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\dashboard\page.tsx (Created — dashboard moved to protected route group)
+  - C:\xampp\htdocs\jaagee\app\admin\dashboard\page.tsx (Deleted — replaced by protected route group)
+What Changed:
+  - Installed @supabase/ssr 0.12.7 for cookie-based server-side session management.
+  - Created lib/supabase/server.ts: async createSupabaseServerClient() using @supabase/ssr
+    createServerClient with Next.js cookies() API (read/write via getAll/setAll).
+  - Created proxy.ts (Next.js 16 replacement for middleware.ts):
+    - Named `proxy` export as required by Next.js 16 convention.
+    - Matcher: /admin/:path* — covers all /admin/* routes.
+    - /admin/login is excluded via an early-return guard inside the function (Next.js
+      route matchers do not support PCRE lookaheads, so the guard is in code).
+    - Step 1: Calls supabase.auth.getUser() to refresh session cookies on every request.
+    - Step 2: Unauthenticated users → redirect /admin/login (no loop — login returns early).
+    - Step 3: Calls is_admin(user_id) RPC (SECURITY DEFINER function already in schema.sql).
+    - Step 4: Non-admin authenticated users → redirect /admin/login?error=unauthorized.
+    - Step 5: Confirmed admins → pass through with refreshed session cookies.
+  - Created /admin/login (app/admin/login/page.tsx):
+    - Server Component with signIn() Server Action calling supabase.auth.signInWithPassword().
+    - Error states surfaced via searchParams: invalid_credentials, unauthorized, missing_fields.
+    - No signup link. noindex/nofollow robots meta.
+    - Matches existing dark CMS aesthetic (bg-[#0F172A], font-mono).
+    - Successful login redirects to /admin/dashboard.
+  - Created app/admin/(protected)/layout.tsx (Next.js route group — strips "(protected)" from URL):
+    - Re-fetches authenticated user for display; belt-and-braces redirect if session missing.
+    - Renders existing dark CMS header (JAAGEE. wordmark, CMS Admin Control badge).
+    - Shows authenticated admin email in header.
+    - Logout via signOut() Server Action: calls supabase.auth.signOut(), redirects /admin/login.
+    - Login page (/admin/login) is NOT wrapped by this layout (separate directory).
+  - Moved dashboard to app/admin/(protected)/dashboard/page.tsx:
+    - Removed the "Auth Mode: Supabase Connected" implementation-detail text from header.
+    - Header and logout now rendered by parent layout.tsx.
+    - All data logic (getProducts, getBrands, getCategories) and table rendering unchanged.
+  - Authorization is enforced server-side in proxy.ts — not through UI guards alone.
+  - Public website, product data, enquiry API, and all other routes are completely unchanged.
+Verification:
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully (Turbopack, 16 routes, 0 warnings, exit code 0).
+  - Route output confirmed: /admin/dashboard marked `ƒ Proxy (Middleware)`, /admin/login marked `ƒ`.
+  - Auth flow verified:
+    - Unauthenticated GET /admin/dashboard → proxy redirects to /admin/login.
+    - Invalid login credentials → stays on /admin/login?error=invalid_credentials with error banner.
+    - Valid admin login → signInWithPassword() sets session cookie, redirects to /admin/dashboard.
+    - Non-admin authenticated user → is_admin() returns false, redirected to /admin/login?error=unauthorized.
+    - Logout → signOut() Server Action clears session cookie, redirects to /admin/login.
+
+[2026-09-18] - Phase 18: Product CMS / CRUD
+Files Affected:
+  - C:\xampp\htdocs\jaagee\lib\validation\product.ts (Created — Zod product form schema + text parsers)
+  - C:\xampp\htdocs\jaagee\lib\db\admin-repository.ts (Created — admin write operations)
+  - C:\xampp\htdocs\jaagee\components\admin\product-form-fields.tsx (Created — shared form Server Component)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\products\page.tsx (Created — product list with filter/search)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\products\new\page.tsx (Created — create product page)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\products\[slug]\edit\page.tsx (Created — edit product page)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\dashboard\page.tsx (Updated — CMS module cards replacing inline table)
+What Changed:
+  - Created lib/validation/product.ts (Zod):
+    - ProductFormSchema: name, slug (regex-validated), sku, brand_slug, category_slug,
+      industry_slugs_raw (comma-joined multi-select), short_description, full_description,
+      specifications_raw (Label: Value per line), features_raw, applications_raw,
+      status (draft|published|archived|discontinued), verification_status, is_featured, replacement_product_slug.
+    - Parser helpers: parseSpecificationsRaw(), parseListRaw(), parseIndustrySlugsRaw(),
+      specificationsToRaw(), listToRaw() for bi-directional text↔JSON conversion.
+  - Created lib/db/admin-repository.ts:
+    - adminCreateProduct(): resolves brand/category/replacement slugs to UUIDs, inserts product,
+      syncs product_industries junction, returns slug on success or error message.
+    - adminUpdateProduct(): fetches product UUID from slug, applies update, syncs industries.
+      Handles unique constraint (23505) to surface slug conflict errors.
+    - adminSetProductStatus(): one-query status change for quick publish/archive/discontinue.
+    - All functions accept a SupabaseClient (session-aware) — no anon write access.
+  - Created components/admin/product-form-fields.tsx (Server Component):
+    - Sections: Identity (name, slug, sku), Classification (brand, category, multi-select industries),
+      Descriptions (short, full), Technical Data (specs, features, applications as textarea),
+      Publication Status (status, verification, is_featured checkbox),
+      Discontinued Replacement (product select dropdown).
+    - Used by both new and edit pages — no duplication.
+  - Created /admin/products (list page):
+    - URL-searchParam-driven filter: q (name/slug/brand text search), brand, category, status, verification.
+    - All filtering in-memory after fetching all records via getProducts(status: 'all').
+    - No hardcoded product-count limit — renders all matching records in a scrollable table.
+    - Edit link per row; View Live link for published products.
+    - Clear filter link resets all params.
+  - Created /admin/products/new (create page):
+    - Server Action createProduct(): Zod validation → adminCreateProduct() → redirect to edit page.
+    - Admin auth re-checked (getUser + is_admin RPC) inside the action.
+    - Validation errors surfaced via searchParams ?error=.
+  - Created /admin/products/[slug]/edit (edit page):
+    - Server Action updateProduct(originalSlug): supports slug rename; redirects to new slug on save.
+    - Server Action quickStatusChange(): one-click status change buttons (publish/archive/discontinue/draft).
+    - Both actions enforce admin auth independently.
+    - Success/error banners rendered from ?success= / ?error= searchParams.
+    - getProductBySlug() populates form defaults; notFound() on missing product.
+  - Updated dashboard: replaced inline product table with CMS module cards.
+    - Products card links to /admin/products and /admin/products/new.
+    - Reference Data card shows live brand + category counts.
+  - Public repository (repository.ts), public routes, and product/seed data are completely unchanged.
+  - Image/Storage upload deferred to Phase 19 as specified.
+Verification:
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully (Turbopack, 19 routes, 0 warnings, exit code 0).
+  - All 3 new admin routes compiled and marked `ƒ Proxy (Middleware)`:
+    /admin/products, /admin/products/new, /admin/products/[slug]/edit.
+  - Auth flow: all three routes are gated by proxy.ts + belt-and-braces action-level checks.
+  - Product list: search by name/slug/brand, filter by brand/category/status/verification confirmed.
+  - Create: Zod validation rejects bad slug format, missing required fields, duplicate slug (23505).
+  - Edit: full form save, slug rename, quick status change buttons (4 statuses).
+  - Status changes: draft → published, published → archived, any → discontinued with replacement field.
+  - Discontinued replacement: dropdown populated with all products excluding self.
+  - Public /products catalogue, /products/[slug], and all other public routes unaffected.
+
+[2026-09-19] - Phase 19: Product Media / Supabase Storage
+Files Affected:
+  - C:\xampp\htdocs\jaagee\lib\supabase\admin.ts (Created — service-role Supabase client)
+  - C:\xampp\htdocs\jaagee\lib\db\image-repository.ts (Created — admin image storage & DB repository)
+  - C:\xampp\htdocs\jaagee\lib\db\repository.ts (Updated — fixed mapSupabaseProduct to prefer is_primary image)
+  - C:\xampp\htdocs\jaagee\next.config.mjs (Updated — configured experimental.serverActions.bodySizeLimit to 6mb)
+  - C:\xampp\htdocs\jaagee\.env.local (Updated — added SUPABASE_SERVICE_ROLE_KEY documentation)
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\products\[slug]\edit\page.tsx (Updated — integrated ImageManager panel and Server Actions)
+What Changed:
+  - Created lib/supabase/admin.ts:
+    - Service-role Supabase client (createSupabaseAdminClient) initialized strictly server-side.
+    - Used exclusively for Supabase Storage operations without leaking privileges to the browser.
+  - Created lib/db/image-repository.ts:
+    - Implemented adminUploadProductImage: validates MIME type (JPEG/PNG/WebP/GIF) and file size (≤ 5MB),
+      generates unique path ({slug}/{uuid}.{ext}), uploads to `product-images` bucket, and inserts into `product_images`.
+    - Automatically sets first uploaded image as `is_primary = true`.
+    - Implemented adminDeleteProductImage: deletes object from Storage and row from `product_images`. Automatically reassigns primary image if the deleted one was primary.
+    - Implemented adminSetPrimaryImage: clears existing primary flags for product and marks target image as primary.
+    - Implemented adminMoveImage: swaps or shifts `display_order` (move up/down) among product images.
+    - Implemented adminGetProductImages: retrieves ordered image rows for a given product ID.
+  - Updated lib/db/repository.ts:
+    - Enhanced mapSupabaseProduct() to prefer the explicitly flagged `is_primary: true` image, falling back to the first image.
+  - Updated next.config.mjs:
+    - Added experimental.serverActions.bodySizeLimit: '6mb' to allow image uploads up to 5MB plus multipart form overhead.
+  - Updated app/admin/(protected)/products/[slug]/edit/page.tsx:
+    - Added 5 Server Actions: uploadImageAction, deleteImageAction, setPrimaryImageAction, moveImageUpAction, moveImageDownAction.
+    - Added ImageManager section displaying gallery of product images with Primary badges, Move Up/Down buttons, Set Primary button, and Delete confirmation form.
+    - Included upload form with file input, alt text input, and validation hints.
+    - Gracefully handles seed fallback items where database ID is not yet connected to Supabase DB.
+Verification:
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully (Turbopack, 19 routes, 0 warnings, exit code 0).
+  - All admin routes and Server Actions compiled with proper proxy middleware and server actions support.
+  - Public routes, catalogue fallbacks, and local seed images (/images/products/...) remain completely intact.
+
+[2026-09-19] - Phase 19 Fix: Server Action Image Upload Attributes & Body Size Limit
+Files Affected:
+  - C:\xampp\htdocs\jaagee\app\admin\(protected)\products\[slug]\edit\page.tsx (Updated — removed explicit encType from Server Action form)
+  - C:\xampp\htdocs\jaagee\next.config.mjs (Verified — confirmed experimental.serverActions.bodySizeLimit: '6mb' configuration for Next.js 16.3.3)
+What Changed:
+  - Fixed React 19 Server Action form warning in app/admin/(protected)/products/[slug]/edit/page.tsx:
+    - Removed redundant `encType="multipart/form-data"` on `<form action={uploadAction}>`. In React 19, forms invoking Server Action functions automatically handle multipart serialization without explicit encType/method attributes.
+  - Investigated Next.js 16.3.3 / Turbopack Server Action bodySizeLimit:
+    - Confirmed `experimental.serverActions.bodySizeLimit: '6mb'` is the exact supported configuration in Next.js 16.3.3 (Zod experimentalSchema, config-shared.d.ts, and action-handler.js).
+    - Verified that the error `Body exceeded 6mb limit` occurs when a tested image or raw payload stream exceeds 6 MB (6,291,456 bytes), whereas valid files <= 5 MB (up to 5,242,880 bytes) fit within the 6 MB window leaving ~1 MB of headroom for multipart boundaries, action identifiers, and field metadata.
+    - Maintained server-side MIME verification and 5 MB application limit in lib/db/image-repository.ts.
+Verification:
+  - `npx tsc --noEmit` exited with 0 errors.
+  - `npm run build` completed successfully (Turbopack, 19 routes, 0 warnings, exit code 0).
+  - Clean Server Action compilation with no React encType warnings.
+
+
+
+[2026-09-19] - Phase 20: Public Enquiry Submission & Contact Flow
+Files Affected:
+  - C:\xampp\htdocs\jaagee\lib\validation\enquiry.ts (Updated — added .trim() to string inputs, enforced min(2) on product_requirement, added length bounds)
+  - C:\xampp\htdocs\jaagee\lib\db\enquiry-repository.ts (Created — public enquiry insertion repository using Supabase anon key without .select() chaining)
+  - C:\xampp\htdocs\jaagee\app\api\enquiry\route.ts (Updated — integrated EnquirySchema, client metadata parsing, honeypot validation, createEnquiry repository, 405 Method Not Allowed on GET)
+  - C:\xampp\htdocs\jaagee\app\contact\page.tsx (Updated — ContactForm with explicit submission states idle/submitting/success/error, duplicate submit guard, required asterisk for requirement, field-level error messages)
+What Changed:
+  - Validation:
+    - Updated EnquirySchema in lib/validation/enquiry.ts with .trim() on all text fields (name, email, organization, phone, product_requirement, message), rejecting whitespace-only submissions.
+    - Made product_requirement strictly required (min(2)), and added realistic max lengths for security.
+  - Database Layer:
+    - Created lib/db/enquiry-repository.ts with createEnquiry(data, metadata) utilizing @supabase/supabase-js with public anon credentials (NEXT_PUBLIC_SUPABASE_ANON_KEY).
+    - Avoided chaining .select() on supabase.from('enquiries').insert(...) to comply with Supabase RLS write-only permissions on the public anon role.
+  - API Route (app/api/enquiry/route.ts):
+    - Validates payload against EnquirySchema with detailed field-level errors on 400.
+    - Preserves honeypot check (silently returning 200 to discard bot spam).
+    - Extracts client IP and User-Agent from headers (x-forwarded-for, x-real-ip, user-agent) and persists to ip_address and user_agent columns.
+    - Explicitly blocks GET requests with HTTP 405 Method Not Allowed.
+  - Frontend (app/contact/page.tsx):
+    - Enhanced ContactForm component with dedicated status state machine (idle | submitting | success | error).
+    - Added UI double-submit prevention (disabling the submit button and inputs while submitting).
+    - Added required asterisks and attributes to mandatory fields (including Product / Equipment Requirement).
+    - Added field error messaging under each input for immediate feedback.
+Verification:
+  - npx tsc --noEmit exited with 0 errors.
+  - npm run build completed successfully (Turbopack, exit code 0).
+  - Validation test: Missing fields, empty strings, and whitespace-only fields returned HTTP 400 with field errors.
+  - Honeypot test: Filled honeypot returned HTTP 200 without creating DB records.
+  - Method test: Public GET on /api/enquiry returned HTTP 405 Method Not Allowed.
+  - Database & RLS security: Public anon role confirmed unable to read or query existing rows (SELECT * FROM enquiries returned 0 rows under RLS). Valid submission successfully inserted row in Supabase enquiries table with parsed metadata.
+  - Client bundle inspection: Confirmed SUPABASE_SERVICE_ROLE_KEY is not present in client bundle or browser network requests.
